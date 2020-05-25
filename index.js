@@ -28,11 +28,7 @@ function addExpense(){
   totalExpense+=exp
   hea.textContent = `Total: ${totalExpense} `;
 
-  const allExpensehtml = allExpense.map(expense => createListItem(expense));
-
-const joinedall = allExpensehtml.join("");
-
-expenseTable.innerHTML = joinedall;
+  renderList(allExpense);
 }
 
 const element = document.querySelector("#btnSelector");
@@ -42,6 +38,24 @@ element.addEventListener("click", addExpense, false);
 function getDateSring(moment)
 {
   return moment.toLocaleDateString('en-US', { year:'numeric',month:'long' ,day:'numeric'})
+}
+
+function deleteItem(dateValue) {
+  const newArr = [];
+
+  for(let i=0; i<allExpense.length; i++) {
+    if (allExpense[i].moment.valueOf() !== dateValue){
+      newArr.push(allExpense[i]);
+    }
+  }
+  renderList(newArr);
+
+}
+
+function renderList(arrOfList){
+  const allExpensehtml = arrOfList.map(expense => createListItem(expense));
+  const joinedall = allExpensehtml.join("");
+  expenseTable.innerHTML = joinedall;
 }
 
 function createListItem({ desc, amount, moment }){
@@ -55,7 +69,9 @@ function createListItem({ desc, amount, moment }){
               <span class="px-5">
                 <b>₹${amount}</b>
               </span>
-              <button type="button" class="btn btn-outline-danger btn-sm">
+              <button type="button" class="btn btn-outline-danger btn-sm"
+              onclick="deleteItem(${moment.valueOf()})"
+              >
                 <i class="fa fa-trash" style="font-size:20px;color:black;"></i>
               </button>
             </div>
